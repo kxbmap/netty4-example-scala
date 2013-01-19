@@ -10,7 +10,7 @@ object FactorialServer extends App with Usage {
   }
 
   val b = new ServerBootstrap()
-  try b.group(new NioEventLoopGroup())
+  try b.group(new NioEventLoopGroup(), new NioEventLoopGroup())
     .channel(classOf[NioServerSocketChannel])
     .localAddress(port)
     .childHandler(new FactorialServerInitializer())
