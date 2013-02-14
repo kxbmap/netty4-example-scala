@@ -8,9 +8,7 @@ scalaVersion := "2.10.0"
 
 scalacOptions ++= Seq("-feature", "-deprecation", "-unchecked")
 
-libraryDependencies += "io.netty" % "netty" % "4.0.0.Beta1-SNAPSHOT" changing()
-
-resolvers += Resolver.sonatypeRepo("snapshots")
+libraryDependencies += "io.netty" % "netty-all" % "4.0.0.Beta1"
 
 fork := true
 

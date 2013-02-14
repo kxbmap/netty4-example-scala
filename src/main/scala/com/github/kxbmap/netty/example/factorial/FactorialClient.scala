@@ -2,7 +2,8 @@ package com.github.kxbmap.netty.example
 package factorial
 
 import io.netty.bootstrap.Bootstrap
-import io.netty.channel.socket.nio.{NioSocketChannel, NioEventLoopGroup}
+import io.netty.channel.nio.NioEventLoopGroup
+import io.netty.channel.socket.nio.NioSocketChannel
 import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, Promise}
 

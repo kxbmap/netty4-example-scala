@@ -2,7 +2,8 @@ package com.github.kxbmap.netty.example
 package factorial
 
 import io.netty.bootstrap.ServerBootstrap
-import io.netty.channel.socket.nio.{NioServerSocketChannel, NioEventLoopGroup}
+import io.netty.channel.nio.NioEventLoopGroup
+import io.netty.channel.socket.nio.NioServerSocketChannel
 
 object FactorialServer extends App with Usage {
   val port = parseOptions("<port>") {

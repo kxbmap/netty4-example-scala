@@ -7,7 +7,7 @@ import io.netty.handler.codec.MessageToByteEncoder
 import java.lang.{Integer => JInt, Long => JLong}
 import java.math.{BigInteger => JBigInt}
 
-class NumberEncoder extends MessageToByteEncoder[Number](classOf[Number]) {
+class NumberEncoder extends MessageToByteEncoder[Number] {
   def encode(ctx: ChannelHandlerContext, msg: Number, out: ByteBuf) {
     // Convert to a BigInt first for easier implementation.
     val v = msg match {
