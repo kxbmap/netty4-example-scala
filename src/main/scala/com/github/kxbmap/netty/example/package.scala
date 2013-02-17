@@ -1,8 +1,6 @@
 package com.github.kxbmap.netty
 
 import io.netty.channel.{ChannelFutureListener, ChannelFuture, ChannelInitializer, Channel}
-import scala.concurrent.{Promise, Future}
-import scala.util.control.NonFatal
 
 package object example {
 
@@ -25,16 +23,4 @@ package object example {
       def operationComplete(future: ChannelFuture) { f(future) }
     }
 
-  implicit def NettyFutureToFuture(nettyFuture: ChannelFuture): Future[Channel] = {
-    val p = Promise[Channel]()
-    nettyFuture.addListener { future: ChannelFuture =>
-      if (future.isSuccess)
-        p success future.channel()
-      else future.cause() match {
-        case NonFatal(e) => p failure e
-        case fatal => throw fatal
-      }
-    }
-    p.future
-  }
 }

@@ -2,14 +2,12 @@ package com.github.kxbmap.netty.example
 package factorial
 
 import io.netty.buffer.MessageBuf
-import io.netty.channel.{ChannelHandlerContext, ChannelInboundMessageHandlerAdapter}
+import io.netty.channel.{ChannelFuture, ChannelHandlerContext, ChannelInboundMessageHandlerAdapter}
 import java.util.logging.Level
 import scala.concurrent.Promise
 
 class FactorialClientHandler(count: Int, answer: Promise[BigInt])
   extends ChannelInboundMessageHandlerAdapter[BigInt] with Logging {
-
-  import scala.concurrent.ExecutionContext.Implicits.global
 
   private[this] var receivedMessages: Int = 0
 
@@ -22,7 +20,7 @@ class FactorialClientHandler(count: Int, answer: Promise[BigInt])
     receivedMessages += 1
     if (receivedMessages == count) {
       // Completes the answer after closing the connection.
-      ctx.channel().close() onComplete { _ =>
+      ctx.channel().close().addListener { _: ChannelFuture =>
         answer success msg
       }
     }
@@ -48,8 +46,8 @@ class FactorialClientHandler(count: Int, answer: Promise[BigInt])
     val f = ctx.flush()
 
     for (i <- next)
-      f onSuccess {
-        case _ => sendNumbers(ctx, i)
+      f.addListener { cf: ChannelFuture =>
+        if (cf.isSuccess) sendNumbers(ctx, i)
       }
   }
 }
