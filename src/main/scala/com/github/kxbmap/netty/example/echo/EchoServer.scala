@@ -9,19 +9,21 @@ import io.netty.channel.socket.nio.NioServerSocketChannel
 import io.netty.handler.logging.{LogLevel, LoggingHandler}
 import java.net.InetSocketAddress
 
+
 object EchoServer extends App with Usage {
   val port = parseOptions("<port>") {
     case p :: Nil => p.toInt
   }
 
   // Configure the server.
-  val b = new ServerBootstrap()
+  val bossGroup = new NioEventLoopGroup()
+  val workerGroup = new NioEventLoopGroup()
   try {
-    b.group(new NioEventLoopGroup(), new NioEventLoopGroup())
+    val b = new ServerBootstrap()
+      .group(bossGroup, workerGroup)
       .channel(classOf[NioServerSocketChannel])
       .option(ChannelOption.SO_BACKLOG, Int.box(100))
       .localAddress(new InetSocketAddress(port))
-      .childOption(ChannelOption.TCP_NODELAY, Boolean.box(true))
       .handler(new LoggingHandler(LogLevel.INFO))
       .childHandler { ch: SocketChannel =>
         ch.pipeline().addLast(
@@ -34,7 +36,9 @@ object EchoServer extends App with Usage {
 
     // Wait until the server socket is closed.
     f.channel().closeFuture().sync()
+  } finally {
+    // Shut down all event loops to terminate all threads.
+    bossGroup.shutdown()
+    workerGroup.shutdown()
   }
-  // Shut down all event loops to terminate all threads.
-  finally b.shutdown()
 }

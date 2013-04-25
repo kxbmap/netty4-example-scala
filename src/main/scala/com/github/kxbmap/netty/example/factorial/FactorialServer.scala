@@ -10,12 +10,18 @@ object FactorialServer extends App with Usage {
     case p :: Nil => p.toInt
   }
 
-  val b = new ServerBootstrap()
-  try b.group(new NioEventLoopGroup(), new NioEventLoopGroup())
+  val bossGroup = new NioEventLoopGroup()
+  val workerGroup = new NioEventLoopGroup()
+
+  try new ServerBootstrap()
+    .group(bossGroup, workerGroup)
     .channel(classOf[NioServerSocketChannel])
     .localAddress(port)
     .childHandler(new FactorialServerInitializer())
     .bind().sync()
     .channel().closeFuture().sync()
-  finally b.shutdown()
+  finally {
+    bossGroup.shutdown()
+    workerGroup.shutdown()
+  }
 }

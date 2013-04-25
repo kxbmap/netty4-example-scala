@@ -1,14 +1,15 @@
 package com.github.kxbmap.netty.example
 package factorial
 
-import io.netty.buffer.ByteBuf
+import io.netty.buffer.{MessageBuf, ByteBuf}
 import io.netty.channel.ChannelHandlerContext
 import io.netty.handler.codec.{CorruptedFrameException, ByteToMessageDecoder}
 
 class BigIntDecoder extends ByteToMessageDecoder {
-  def decode(ctx: ChannelHandlerContext, in: ByteBuf): BigInt =
-    if (in.readableBytes() < 5) null
-    else {
+
+  def decode(ctx: ChannelHandlerContext, in: ByteBuf, out: MessageBuf[AnyRef]) {
+    // Wait until the length prefix is available
+    if (in.readableBytes() >= 5) {
       in.markReaderIndex()
 
       // Check the magic number.
@@ -22,8 +23,10 @@ class BigIntDecoder extends ByteToMessageDecoder {
       val dataLength = in.readInt()
       if (in.readableBytes() < dataLength) {
         in.resetReaderIndex()
-        null
+      } else {
+        out.add(BigInt(new Array[Byte](dataLength) tap in.readBytes))
       }
-      else BigInt(new Array[Byte](dataLength) tap in.readBytes)
     }
+  }
+
 }

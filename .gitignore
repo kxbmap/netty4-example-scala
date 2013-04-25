@@ -13,5 +13,6 @@ project/plugins/project/
 .scala_dependencies
 
 # IntelliJ IDEA specific
-/.idea/workspace.xml
+/.idea
+*.iml
 *.sc

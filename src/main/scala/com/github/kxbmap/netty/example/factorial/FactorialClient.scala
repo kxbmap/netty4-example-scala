@@ -13,11 +13,12 @@ object FactorialClient extends App with Usage {
       case List(h, p, c) => (h, p.toInt, c.toInt.ensuring(_ > 0))
     }
 
-  val b = new Bootstrap()
+  val group = new NioEventLoopGroup()
   try {
     val answer = Promise[BigInt]()
 
-    b.group(new NioEventLoopGroup())
+    val b = new Bootstrap()
+      .group(group)
       .channel(classOf[NioSocketChannel])
       .remoteAddress(host, port)
       .handler(new FactorialClientInitializer(count, answer))
@@ -30,5 +31,5 @@ object FactorialClient extends App with Usage {
 
     Console.err.println(f"Factorial of $count%,d is: $fractional%,d")
   }
-  finally b.shutdown()
+  finally group.shutdown()
 }

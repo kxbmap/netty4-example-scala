@@ -4,11 +4,17 @@ version := "0.1.0-SNAPSHOT"
 
 organization := "com.github.kxbmap"
 
-scalaVersion := "2.10.0"
+scalaVersion := "2.10.1"
 
 scalacOptions ++= Seq("-feature", "-deprecation", "-unchecked")
 
-libraryDependencies += "io.netty" % "netty-all" % "4.0.0.Beta1"
+libraryDependencies ++= Seq(
+  "io.netty"   % "netty-all" % "4.0.0.CR2-SNAPSHOT" changing(),
+  "com.jcraft" % "jzlib"     % "1.1.2",
+  "javassist"  % "javassist" % "3.12.1.GA"
+)
+
+resolvers += Resolver.sonatypeRepo("snapshots")
 
 fork := true
 

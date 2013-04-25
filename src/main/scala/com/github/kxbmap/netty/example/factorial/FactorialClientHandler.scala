@@ -28,7 +28,9 @@ class FactorialClientHandler(count: Int, answer: Promise[BigInt])
 
   override def exceptionCaught(ctx: ChannelHandlerContext, cause: Throwable) {
     logger.log(Level.WARNING, "Unexpected exception from downstream.", cause)
-    ctx.close()
+    ctx.close().addListener { _: ChannelFuture =>
+      answer failure cause
+    }
   }
 
   private def sendNumbers(ctx: ChannelHandlerContext, start: Int) {

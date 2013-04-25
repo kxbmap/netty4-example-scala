@@ -5,8 +5,8 @@
       <configuration>
         <option name="basePackage" value="com.github.kxbmap.netty.example" />
         <option name="compilerLibraryLevel" value="Project" />
-        <option name="compilerLibraryName" value="SBT: scala:2.10.0" />
-        <option name="compilerOptions" value="-feature -deprecation -unchecked" />
+        <option name="compilerLibraryName" value="SBT: scala:2.10.1" />
+        <option name="compilerOptions" value="-deprecation -unchecked" />
         <option name="deprecationWarnings" value="true" />
         <option name="fsc" value="true" />
         <option name="uncheckedWarnings" value="true" />
@@ -28,8 +28,10 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="SBT: org.scala-lang:scala-library:2.10.0" level="project" />
-    <orderEntry type="library" name="SBT: io.netty:netty-all:4.0.0.Beta1" level="project" />
+    <orderEntry type="library" name="SBT: org.scala-lang:scala-library:2.10.1" level="project" />
+    <orderEntry type="library" name="SBT: io.netty:netty-all:4.0.0.CR2-SNAPSHOT" level="project" />
+    <orderEntry type="library" name="SBT: com.jcraft:jzlib:1.1.2" level="project" />
+    <orderEntry type="library" name="SBT: javassist:javassist:3.12.1.GA" level="project" />
   </component>
 </module>
 

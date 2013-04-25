@@ -14,21 +14,24 @@ object ObjectEchoServer extends App with Usage {
     case p :: Nil => p.toInt
   }
 
-  val b = new ServerBootstrap()
-  try
-    b.group(new NioEventLoopGroup(), new NioEventLoopGroup())
-      .channel(classOf[NioServerSocketChannel])
-      .localAddress(new InetSocketAddress(port))
-      .handler(new LoggingHandler(LogLevel.INFO))
-      .childHandler { ch: SocketChannel =>
-        ch.pipeline().addLast(
-          new ObjectEncoder(),
-          new ObjectDecoder(ClassResolvers.cacheDisabled(null)),
-          new LoggingHandler(LogLevel.INFO),
-          new ObjectEchoServerHandler())
-      }
-      // Bind and start to accept incoming connections.
-      .bind().sync().channel().closeFuture().sync()
-  finally
-    b.shutdown()
+  val bossGroup = new NioEventLoopGroup()
+  val workerGroup = new NioEventLoopGroup()
+  try new ServerBootstrap()
+    .group(bossGroup, workerGroup)
+    .channel(classOf[NioServerSocketChannel])
+    .localAddress(new InetSocketAddress(port))
+    .handler(new LoggingHandler(LogLevel.INFO))
+    .childHandler { ch: SocketChannel =>
+      ch.pipeline().addLast(
+        new ObjectEncoder(),
+        new ObjectDecoder(ClassResolvers.cacheDisabled(null)),
+        new LoggingHandler(LogLevel.INFO),
+        new ObjectEchoServerHandler())
+    }
+    // Bind and start to accept incoming connections.
+    .bind().sync().channel().closeFuture().sync()
+  finally {
+    bossGroup.shutdown()
+    workerGroup.shutdown()
+  }
 }

@@ -11,7 +11,6 @@ class EchoServerHandler extends ChannelInboundByteHandlerAdapter with Logging {
 
   def inboundBufferUpdated(ctx: ChannelHandlerContext, in: ByteBuf) {
     val out = ctx.nextOutboundByteBuffer()
-    out.discardReadBytes()
     out.writeBytes(in)
     ctx.flush()
   }

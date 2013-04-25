@@ -7,6 +7,8 @@ import java.util.logging.Level
 
 class EchoClientHandler(firstMessageSize: Int) extends ChannelInboundByteHandlerAdapter with Logging {
 
+  require(firstMessageSize > 0, s"firstMessageSize: $firstMessageSize")
+
   private val firstMessage: ByteBuf =
     Unpooled.buffer(firstMessageSize) tap { buf =>
       for (i <- 0 until buf.capacity())
@@ -19,7 +21,6 @@ class EchoClientHandler(firstMessageSize: Int) extends ChannelInboundByteHandler
 
   def inboundBufferUpdated(ctx: ChannelHandlerContext, in: ByteBuf) {
     val out = ctx.nextOutboundByteBuffer()
-    out.discardReadBytes()
     out.writeBytes(in)
     ctx.flush()
   }

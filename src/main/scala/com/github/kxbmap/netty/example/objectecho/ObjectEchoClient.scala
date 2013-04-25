@@ -15,20 +15,20 @@ object ObjectEchoClient extends App with Usage {
       case List(h, p) => (h, p.toInt, 256)
     }
 
-  val b = new Bootstrap()
-  try
-    b.group(new NioEventLoopGroup())
-      .channel(classOf[NioSocketChannel])
-      .remoteAddress(host, port)
-      .handler { ch: SocketChannel =>
-        ch.pipeline().addLast(
-          new ObjectEncoder(),
-          new ObjectDecoder(ClassResolvers.cacheDisabled(null)),
-          new LoggingHandler(LogLevel.INFO),
-          new ObjectEchoClientHandler(firstMessageSize))
-      }
-      // Start the connection attempt.
-      .connect().sync().channel().closeFuture().sync()
+  val group = new NioEventLoopGroup()
+  try new Bootstrap()
+    .group(group)
+    .channel(classOf[NioSocketChannel])
+    .remoteAddress(host, port)
+    .handler { ch: SocketChannel =>
+      ch.pipeline().addLast(
+        new ObjectEncoder(),
+        new ObjectDecoder(ClassResolvers.cacheDisabled(null)),
+        new LoggingHandler(LogLevel.INFO),
+        new ObjectEchoClientHandler(firstMessageSize))
+    }
+    // Start the connection attempt.
+    .connect().sync().channel().closeFuture().sync()
   finally
-    b.shutdown()
+    group.shutdown()
 }
