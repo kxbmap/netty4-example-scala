@@ -2,20 +2,17 @@ package com.github.kxbmap.netty.example
 package factorial
 
 import io.netty.bootstrap.ServerBootstrap
-import io.netty.channel.nio.NioEventLoopGroup
-import io.netty.channel.socket.nio.NioServerSocketChannel
 
 object FactorialServer extends App with Usage {
   val port = parseOptions("<port>") {
     case p :: Nil => p.toInt
   }
 
-  val bossGroup = new NioEventLoopGroup()
-  val workerGroup = new NioEventLoopGroup()
+  val bossGroup, workerGroup = new DefaultEventLoopGroup()
 
   try new ServerBootstrap()
     .group(bossGroup, workerGroup)
-    .channel(classOf[NioServerSocketChannel])
+    .channel(classOf[DefaultServerSocketChannel])
     .localAddress(port)
     .childHandler(new FactorialServerInitializer())
     .bind().sync()
