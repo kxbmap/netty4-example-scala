@@ -30,5 +30,5 @@ object ObjectEchoClient extends App with Usage {
     // Start the connection attempt.
     .connect().sync().channel().closeFuture().sync()
   finally
-    group.shutdown()
+    group.shutdownGracefully()
 }

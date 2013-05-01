@@ -37,5 +37,5 @@ object EchoClient extends App with Usage {
     f.channel().closeFuture().sync()
   }
   // Shut down the event loop to terminate all threads.
-  finally group.shutdown()
+  finally group.shutdownGracefully()
 }

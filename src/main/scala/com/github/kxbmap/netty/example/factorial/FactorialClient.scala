@@ -31,5 +31,5 @@ object FactorialClient extends App with Usage {
 
     Console.err.println(f"Factorial of $count%,d is: $fractional%,d")
   }
-  finally group.shutdown()
+  finally group.shutdownGracefully()
 }
