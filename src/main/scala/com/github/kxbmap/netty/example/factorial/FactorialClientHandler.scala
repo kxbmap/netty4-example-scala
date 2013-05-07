@@ -2,7 +2,7 @@ package com.github.kxbmap.netty.example
 package factorial
 
 import io.netty.buffer.MessageBuf
-import io.netty.channel.{ChannelFuture, ChannelHandlerContext, ChannelInboundMessageHandlerAdapter}
+import io.netty.channel.{ChannelHandlerContext, ChannelInboundMessageHandlerAdapter}
 import java.util.logging.Level
 import scala.concurrent.Promise
 
@@ -20,17 +20,13 @@ class FactorialClientHandler(count: Int, answer: Promise[BigInt])
     receivedMessages += 1
     if (receivedMessages == count) {
       // Completes the answer after closing the connection.
-      ctx.channel().close().addListener { _: ChannelFuture =>
-        answer success msg
-      }
+      ctx.channel().close() onComplete { _ => answer success msg }
     }
   }
 
   override def exceptionCaught(ctx: ChannelHandlerContext, cause: Throwable) {
     logger.log(Level.WARNING, "Unexpected exception from downstream.", cause)
-    ctx.close().addListener { _: ChannelFuture =>
-      answer failure cause
-    }
+    ctx.close() onComplete { _ => answer failure cause }
   }
 
   private def sendNumbers(ctx: ChannelHandlerContext, start: Int) {
@@ -48,8 +44,6 @@ class FactorialClientHandler(count: Int, answer: Promise[BigInt])
     val f = ctx.flush()
 
     for (i <- next)
-      f.addListener { cf: ChannelFuture =>
-        if (cf.isSuccess) sendNumbers(ctx, i)
-      }
+      f onSuccess { case _ => sendNumbers(ctx, i) }
   }
 }
