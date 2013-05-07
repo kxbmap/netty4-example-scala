@@ -27,9 +27,9 @@ object FactorialClient extends App with Usage {
     b.connect().sync()
 
     // Retrieve the answer.
-    val fractional = Await.result(answer.future, Duration.Inf)
+    val factorial = Await.result(answer.future, Duration.Inf)
 
-    Console.err.println(f"Factorial of $count%,d is: $fractional%,d")
+    Console.err.println(f"Factorial of $count%,d is: $factorial%,d")
   }
   finally group.shutdownGracefully()
 }
