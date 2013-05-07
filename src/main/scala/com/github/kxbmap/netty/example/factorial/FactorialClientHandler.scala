@@ -13,7 +13,7 @@ class FactorialClientHandler(count: Int, answer: Promise[BigInt])
 
 
   override def channelActive(ctx: ChannelHandlerContext) {
-    sendNumbers(ctx, 1)
+    sendNumbers(1)(ctx)
   }
 
   def messageReceived(ctx: ChannelHandlerContext, msg: BigInt) {
@@ -29,7 +29,7 @@ class FactorialClientHandler(count: Int, answer: Promise[BigInt])
     ctx.close() onComplete { _ => answer failure cause }
   }
 
-  private def sendNumbers(ctx: ChannelHandlerContext, start: Int) {
+  private def sendNumbers(start: Int)(implicit ctx: ChannelHandlerContext) {
     // Do not send more than 4096 numbers.
     @annotation.tailrec
     def addNum(i: Int, out: MessageBuf[AnyRef]): Option[Int] =
@@ -44,6 +44,6 @@ class FactorialClientHandler(count: Int, answer: Promise[BigInt])
     val f = ctx.flush()
 
     for (i <- next)
-      f onSuccess { case _ => sendNumbers(ctx, i) }
+      f onSuccess { case _ => sendNumbers(i) }
   }
 }
