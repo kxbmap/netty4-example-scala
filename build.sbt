@@ -9,7 +9,7 @@ scalaVersion := "2.10.1"
 scalacOptions ++= Seq("-feature", "-deprecation", "-unchecked")
 
 libraryDependencies ++= Seq(
-  "io.netty"   % "netty-all" % "4.0.0.CR2-SNAPSHOT" changing(),
+  "io.netty"   % "netty-all" % "4.0.0.CR2", 
   "com.jcraft" % "jzlib"     % "1.1.2",
   "javassist"  % "javassist" % "3.12.1.GA"
 )
