@@ -9,9 +9,9 @@ scalaVersion := "2.10.1"
 scalacOptions ++= Seq("-feature", "-deprecation", "-unchecked")
 
 libraryDependencies ++= Seq(
-  "io.netty"   % "netty-all" % "4.0.0.CR2", 
-  "com.jcraft" % "jzlib"     % "1.1.2",
-  "javassist"  % "javassist" % "3.12.1.GA"
+  "io.netty"      % "netty-all" % "4.0.0.CR3",
+  "com.jcraft"    % "jzlib"     % "1.1.2"       % Runtime,
+  "org.javassist" % "javassist" % "3.17.1-GA"   % Runtime
 )
 
 resolvers += Resolver.sonatypeRepo("snapshots")
