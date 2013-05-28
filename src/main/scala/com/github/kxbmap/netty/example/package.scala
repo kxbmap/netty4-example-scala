@@ -26,25 +26,28 @@ package object example {
 
 
   implicit final class ChannelFutureOps(val cf: ChannelFuture) extends AnyVal {
-    def onSuccess[U](pf: PartialFunction[Channel, U]): ChannelFuture =
-      cf.addListener { future: ChannelFuture =>
-        if (future.isSuccess && pf.isDefinedAt(future.channel()))
-          pf(future.channel())
+    def onSuccess[U](pf: PartialFunction[Channel, U]) {
+      onComplete {
+        case Success(ch) if pf.isDefinedAt(ch) => pf(ch)
+        case _ =>
       }
+    }
 
-    def onFailure[U](pf: PartialFunction[Throwable, U]): ChannelFuture =
-      cf.addListener { future: ChannelFuture =>
-        if (!future.isSuccess && pf.isDefinedAt(future.cause()))
-          pf(future.cause())
+    def onFailure[U](pf: PartialFunction[Throwable, U]) {
+      onComplete {
+        case Failure(cause) if pf.isDefinedAt(cause) => pf(cause)
+        case _ =>
       }
+    }
 
-    def onComplete[U](f: Try[Channel] => U): ChannelFuture =
+    def onComplete[U](f: Try[Channel] => U) {
       cf.addListener { future: ChannelFuture => f(
         if (future.isSuccess)
           Success(future.channel())
         else
           Failure(future.cause())
       )}
+    }
   }
 
 }
