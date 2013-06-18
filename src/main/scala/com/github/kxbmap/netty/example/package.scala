@@ -6,10 +6,7 @@ import scala.util.{Failure, Success, Try}
 package object example {
 
   implicit final class Tapper[T](val obj: T) extends AnyVal {
-    def tap(f: T => Any): T = {
-      if (obj != null) f(obj)
-      obj
-    }
+    def <|[U](f: T => U): T = { f(obj); obj }
   }
 
   import scala.language.implicitConversions

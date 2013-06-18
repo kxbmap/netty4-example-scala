@@ -10,7 +10,7 @@ class EchoClientHandler(firstMessageSize: Int) extends ChannelInboundHandlerAdap
   require(firstMessageSize > 0, s"firstMessageSize: $firstMessageSize")
 
   private val firstMessage: ByteBuf =
-    Unpooled.buffer(firstMessageSize) tap { buf =>
+    Unpooled.buffer(firstMessageSize) <| { buf =>
       for (i <- 0 until buf.capacity())
         buf.writeByte(i)
     }

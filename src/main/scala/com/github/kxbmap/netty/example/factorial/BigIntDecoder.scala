@@ -31,7 +31,7 @@ class BigIntDecoder extends ByteToMessageDecoder {
         in.resetReaderIndex()
       } else {
         // Convert the received data into a new BigInt.
-        out.add(BigInt(new Array[Byte](dataLength) tap in.readBytes))
+        out.add(BigInt(new Array[Byte](dataLength) <| in.readBytes))
       }
     }
   }
