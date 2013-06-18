@@ -3,13 +3,17 @@ package factorial
 
 import io.netty.channel.{MessageList, SimpleChannelInboundHandler, ChannelHandlerContext}
 import java.util.logging.Level
-import scala.concurrent.Promise
+import scala.concurrent.{Future, promise}
 
-class FactorialClientHandler(count: Int, answer: Promise[BigInt]) extends SimpleChannelInboundHandler[BigInt] with Logging {
+class FactorialClientHandler(count: Int) extends SimpleChannelInboundHandler[BigInt] with Logging {
 
   require(count > 0, s"count: $count")
 
   private[this] var receivedMessages: Int = 0
+
+  private val answer = promise[BigInt]()
+
+  def factorial: Future[BigInt] = answer.future
 
   override def channelActive(ctx: ChannelHandlerContext) {
     sendNumbers(1)(ctx)

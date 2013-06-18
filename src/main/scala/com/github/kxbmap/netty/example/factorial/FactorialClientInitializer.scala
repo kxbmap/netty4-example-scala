@@ -4,9 +4,8 @@ package factorial
 import io.netty.channel.ChannelInitializer
 import io.netty.channel.socket.SocketChannel
 import io.netty.handler.codec.compression.{ZlibCodecFactory, ZlibWrapper}
-import scala.concurrent.Promise
 
-class FactorialClientInitializer(count: Int, answer: Promise[BigInt]) extends ChannelInitializer[SocketChannel] {
+class FactorialClientInitializer(count: Int) extends ChannelInitializer[SocketChannel] {
   def initChannel(ch: SocketChannel) {
     (ch.pipeline() /: Seq(
       // Enable stream compression (you can remove these two if unnecessary)
@@ -18,7 +17,7 @@ class FactorialClientInitializer(count: Int, answer: Promise[BigInt]) extends Ch
       "encoder" -> new NumberEncoder(),
 
       // and then business logic.
-      "handler" -> new FactorialClientHandler(count, answer)
+      "handler" -> new FactorialClientHandler(count)
     )) {
       case (pipeline, (name, handler)) => pipeline.addLast(name, handler)
     }
