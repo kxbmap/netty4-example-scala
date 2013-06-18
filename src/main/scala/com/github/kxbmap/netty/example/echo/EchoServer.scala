@@ -9,9 +9,7 @@ import java.net.InetSocketAddress
 
 
 object EchoServer extends App with Usage {
-  val port = parseOptions("<port>") {
-    case p :: Nil => p.toInt
-  }
+  val port = args.headOption.map(_.toInt).getOrElse(8080)
 
   // Configure the server.
   val bossGroup, workerGroup = new DefaultEventLoopGroup()
@@ -24,7 +22,7 @@ object EchoServer extends App with Usage {
       .handler(new LoggingHandler(LogLevel.INFO))
       .childHandler { ch: SocketChannel =>
         ch.pipeline().addLast(
-          new LoggingHandler(LogLevel.INFO),
+          // new LoggingHandler(LogLevel.INFO),
           new EchoServerHandler())
       }
 

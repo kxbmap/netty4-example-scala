@@ -9,7 +9,8 @@ import io.netty.bootstrap.Bootstrap
 object DiscardClient extends App with Usage {
   val (host, port, firstMessageSize) =
     parseOptions("<host> <port> [<first message size>]") {
-      case h :: p :: xs => (h, p.toInt, xs.headOption.map(_.toInt).getOrElse(256))
+      case List(h, p, s) => (h, p.toInt, s.toInt)
+      case List(h, p)    => (h, p.toInt, 256)
     }
 
   val group = new DefaultEventLoopGroup()

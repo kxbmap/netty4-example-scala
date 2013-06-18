@@ -8,7 +8,7 @@ import scala.concurrent.{Await, Promise}
 object FactorialClient extends App with Usage {
   val (host, port, count) =
     parseOptions("<host> <port> <count>") {
-      case List(h, p, c) => (h, p.toInt, c.toInt.ensuring(_ > 0))
+      case List(h, p, c) => (h, p.toInt, c.toInt)
     }
 
   val group = new DefaultEventLoopGroup()

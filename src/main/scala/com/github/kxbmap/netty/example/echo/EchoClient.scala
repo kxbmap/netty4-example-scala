@@ -3,7 +3,6 @@ package echo
 
 import io.netty.bootstrap.Bootstrap
 import io.netty.channel.socket.SocketChannel
-import io.netty.handler.logging.{LoggingHandler, LogLevel}
 import java.net.InetSocketAddress
 
 
@@ -23,7 +22,7 @@ object EchoClient extends App with Usage {
       .remoteAddress(new InetSocketAddress(host, port))
       .handler { ch: SocketChannel =>
         ch.pipeline().addLast(
-          new LoggingHandler(LogLevel.INFO),
+          // new LoggingHandler(LogLevel.INFO),
           new EchoClientHandler(firstMessageSize))
       }
 

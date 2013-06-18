@@ -4,9 +4,7 @@ package factorial
 import io.netty.bootstrap.ServerBootstrap
 
 object FactorialServer extends App with Usage {
-  val port = parseOptions("<port>") {
-    case p :: Nil => p.toInt
-  }
+  val port = args.headOption.map(_.toInt).getOrElse(8080)
 
   val bossGroup, workerGroup = new DefaultEventLoopGroup()
 

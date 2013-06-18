@@ -4,14 +4,14 @@ version := "0.1.0-SNAPSHOT"
 
 organization := "com.github.kxbmap"
 
-scalaVersion := "2.10.1"
+scalaVersion := "2.10.2"
 
 scalacOptions ++= Seq("-feature", "-deprecation", "-unchecked")
 
 libraryDependencies ++= Seq(
-  "io.netty"      % "netty-all" % "4.0.0.CR3",
+  "io.netty"      % "netty-all" % "4.0.0.CR5",
   "com.jcraft"    % "jzlib"     % "1.1.2"       % Runtime,
-  "org.javassist" % "javassist" % "3.17.1-GA"   % Runtime
+  "org.javassist" % "javassist" % "3.18.0-GA"   % Runtime
 )
 
 resolvers += Resolver.sonatypeRepo("snapshots")

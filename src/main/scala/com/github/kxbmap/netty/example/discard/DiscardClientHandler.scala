@@ -2,10 +2,10 @@ package com.github.kxbmap.netty.example
 package discard
 
 import io.netty.buffer.ByteBuf
-import io.netty.channel.{ChannelFuture, ChannelFutureListener, ChannelHandlerContext, ChannelInboundByteHandlerAdapter}
+import io.netty.channel.{MessageList, ChannelInboundHandlerAdapter, ChannelFuture, ChannelFutureListener, ChannelHandlerContext}
 import java.util.logging.Level
 
-class DiscardClientHandler(messageSize: Int) extends ChannelInboundByteHandlerAdapter with Logging {
+class DiscardClientHandler(messageSize: Int) extends ChannelInboundHandlerAdapter with Logging {
 
   require(messageSize > 0, s"messageSize: $messageSize")
 
@@ -22,9 +22,13 @@ class DiscardClientHandler(messageSize: Int) extends ChannelInboundByteHandlerAd
     generateTraffic()
   }
 
-  def inboundBufferUpdated(ctx: ChannelHandlerContext, in: ByteBuf) {
+  override def channelInactive(ctx: ChannelHandlerContext) {
+    content.release()
+  }
+
+  override def messageReceived(ctx: ChannelHandlerContext, msgs: MessageList[AnyRef]) {
     // Server is supposed to send nothing, but if it sends something, discard it.
-    in.clear()
+    msgs.releaseAllAndRecycle()
   }
 
   override def exceptionCaught(ctx: ChannelHandlerContext, cause: Throwable) {
@@ -33,15 +37,9 @@ class DiscardClientHandler(messageSize: Int) extends ChannelInboundByteHandlerAd
   }
 
   private def generateTraffic() {
-    // Fill the outbound buffer up to 64KiB
-    val out = ctx.nextOutboundByteBuffer()
-    while (out.readableBytes() < 65536) {
-      out.writeBytes(content, 0, content.readableBytes())
-    }
-
     // Flush the outbound buffer to the socket.
     // Once flushed, generate the same amount of traffic again.
-    ctx.flush().addListener(trafficGenerator)
+    ctx.write(content.duplicate().retain()).addListener(trafficGenerator)
   }
 
   private val trafficGenerator: ChannelFutureListener = {

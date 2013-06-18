@@ -2,10 +2,10 @@ package com.github.kxbmap.netty.example
 package echo
 
 import io.netty.buffer.{Unpooled, ByteBuf}
-import io.netty.channel.{ChannelHandlerContext, ChannelInboundByteHandlerAdapter}
+import io.netty.channel.{MessageList, ChannelInboundHandlerAdapter, ChannelHandlerContext}
 import java.util.logging.Level
 
-class EchoClientHandler(firstMessageSize: Int) extends ChannelInboundByteHandlerAdapter with Logging {
+class EchoClientHandler(firstMessageSize: Int) extends ChannelInboundHandlerAdapter with Logging {
 
   require(firstMessageSize > 0, s"firstMessageSize: $firstMessageSize")
 
@@ -19,10 +19,8 @@ class EchoClientHandler(firstMessageSize: Int) extends ChannelInboundByteHandler
     ctx.write(firstMessage)
   }
 
-  def inboundBufferUpdated(ctx: ChannelHandlerContext, in: ByteBuf) {
-    val out = ctx.nextOutboundByteBuffer()
-    out.writeBytes(in)
-    ctx.flush()
+  override def messageReceived(ctx: ChannelHandlerContext, msgs: MessageList[AnyRef]) {
+    ctx.write(msgs)
   }
 
   override def exceptionCaught(ctx: ChannelHandlerContext, cause: Throwable) {

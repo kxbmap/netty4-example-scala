@@ -1,11 +1,12 @@
 package com.github.kxbmap.netty.example
 package objectecho
 
-import io.netty.channel.{ChannelHandlerContext, ChannelInboundMessageHandlerAdapter}
+import io.netty.channel.{MessageList, ChannelInboundHandlerAdapter, ChannelHandlerContext}
 import java.util.logging.Level
 
-class ObjectEchoClientHandler(firstMessageSize: Int)
-  extends ChannelInboundMessageHandlerAdapter[List[Int]] with Logging {
+class ObjectEchoClientHandler(firstMessageSize: Int) extends ChannelInboundHandlerAdapter with Logging {
+
+  require(firstMessageSize > 0, s"firstMessageSize: $firstMessageSize")
 
   private val firstMessage = (0 until firstMessageSize).toList
 
@@ -15,8 +16,9 @@ class ObjectEchoClientHandler(firstMessageSize: Int)
     ctx.write(firstMessage)
   }
 
-  def messageReceived(ctx: ChannelHandlerContext, msg: List[Int]) {
-    ctx.write(msg)
+  override def messageReceived(ctx: ChannelHandlerContext, msgs: MessageList[AnyRef]) {
+    // Echo back the received object to the server.
+    ctx.write(msgs)
   }
 
   override def exceptionCaught(ctx: ChannelHandlerContext, cause: Throwable) {

@@ -8,9 +8,7 @@ import io.netty.handler.logging.{LoggingHandler, LogLevel}
 import java.net.InetSocketAddress
 
 object ObjectEchoServer extends App with Usage {
-  val port = parseOptions("<port>") {
-    case p :: Nil => p.toInt
-  }
+  val port = args.headOption.map(_.toInt).getOrElse(8080)
 
   val bossGroup, workerGroup = new DefaultEventLoopGroup()
 
@@ -23,7 +21,6 @@ object ObjectEchoServer extends App with Usage {
       ch.pipeline().addLast(
         new ObjectEncoder(),
         new ObjectDecoder(ClassResolvers.cacheDisabled(null)),
-        new LoggingHandler(LogLevel.INFO),
         new ObjectEchoServerHandler())
     }
     // Bind and start to accept incoming connections.
