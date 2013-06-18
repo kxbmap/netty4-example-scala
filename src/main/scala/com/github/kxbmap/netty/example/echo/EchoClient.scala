@@ -2,7 +2,9 @@ package com.github.kxbmap.netty.example
 package echo
 
 import io.netty.bootstrap.Bootstrap
+import io.netty.channel.nio.NioEventLoopGroup
 import io.netty.channel.socket.SocketChannel
+import io.netty.channel.socket.nio.NioSocketChannel
 import java.net.InetSocketAddress
 
 
@@ -14,11 +16,11 @@ object EchoClient extends App with Usage {
     }
 
   // Configure the client
-  val group = new DefaultEventLoopGroup()
+  val group = new NioEventLoopGroup()
   try {
     val b = new Bootstrap()
       .group(group)
-      .channel(classOf[DefaultSocketChannel])
+      .channel(classOf[NioSocketChannel])
       .remoteAddress(new InetSocketAddress(host, port))
       .handler { ch: SocketChannel =>
         ch.pipeline().addLast(

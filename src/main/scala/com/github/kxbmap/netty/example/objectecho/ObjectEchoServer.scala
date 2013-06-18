@@ -2,7 +2,9 @@ package com.github.kxbmap.netty.example
 package objectecho
 
 import io.netty.bootstrap.ServerBootstrap
+import io.netty.channel.nio.NioEventLoopGroup
 import io.netty.channel.socket.SocketChannel
+import io.netty.channel.socket.nio.NioServerSocketChannel
 import io.netty.handler.codec.serialization.{ClassResolvers, ObjectDecoder, ObjectEncoder}
 import io.netty.handler.logging.{LoggingHandler, LogLevel}
 import java.net.InetSocketAddress
@@ -10,11 +12,11 @@ import java.net.InetSocketAddress
 object ObjectEchoServer extends App with Usage {
   val port = args.headOption.map(_.toInt).getOrElse(8080)
 
-  val bossGroup, workerGroup = new DefaultEventLoopGroup()
+  val bossGroup, workerGroup = new NioEventLoopGroup()
 
   try new ServerBootstrap()
     .group(bossGroup, workerGroup)
-    .channel(classOf[DefaultServerSocketChannel])
+    .channel(classOf[NioServerSocketChannel])
     .localAddress(new InetSocketAddress(port))
     .handler(new LoggingHandler(LogLevel.INFO))
     .childHandler { ch: SocketChannel =>

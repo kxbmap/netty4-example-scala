@@ -5,11 +5,6 @@ import scala.util.{Failure, Success, Try}
 
 package object example {
 
-  type DefaultEventLoopGroup      = io.netty.channel.nio.NioEventLoopGroup
-  type DefaultSocketChannel       = io.netty.channel.socket.nio.NioSocketChannel
-  type DefaultServerSocketChannel = io.netty.channel.socket.nio.NioServerSocketChannel
-
-
   implicit final class Tapper[T](val obj: T) extends AnyVal {
     def tap(f: T => Any): T = {
       if (obj != null) f(obj)

@@ -2,6 +2,8 @@ package com.github.kxbmap.netty.example
 package discard
 
 import io.netty.bootstrap.Bootstrap
+import io.netty.channel.nio.NioEventLoopGroup
+import io.netty.channel.socket.nio.NioSocketChannel
 
 /**
  * Keeps sending random data to the specified address.
@@ -13,11 +15,11 @@ object DiscardClient extends App with Usage {
       case List(h, p)    => (h, p.toInt, 256)
     }
 
-  val group = new DefaultEventLoopGroup()
+  val group = new NioEventLoopGroup()
   try {
     val b = new Bootstrap()
     b.group(group)
-      .channel(classOf[DefaultSocketChannel])
+      .channel(classOf[NioSocketChannel])
       .handler(new DiscardClientHandler(firstMessageSize))
 
     // Make the connection attempt.

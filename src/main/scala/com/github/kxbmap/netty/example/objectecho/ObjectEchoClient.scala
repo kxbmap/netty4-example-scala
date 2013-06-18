@@ -2,7 +2,9 @@ package com.github.kxbmap.netty.example
 package objectecho
 
 import io.netty.bootstrap.Bootstrap
+import io.netty.channel.nio.NioEventLoopGroup
 import io.netty.channel.socket.SocketChannel
+import io.netty.channel.socket.nio.NioSocketChannel
 import io.netty.handler.codec.serialization.{ClassResolvers, ObjectDecoder, ObjectEncoder}
 
 object ObjectEchoClient extends App with Usage {
@@ -12,10 +14,10 @@ object ObjectEchoClient extends App with Usage {
       case List(h, p)    => (h, p.toInt, 256)
     }
 
-  val group = new DefaultEventLoopGroup()
+  val group = new NioEventLoopGroup()
   try new Bootstrap()
     .group(group)
-    .channel(classOf[DefaultSocketChannel])
+    .channel(classOf[NioSocketChannel])
     .remoteAddress(host, port)
     .handler { ch: SocketChannel =>
       ch.pipeline().addLast(
