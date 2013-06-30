@@ -8,7 +8,7 @@ import java.lang.{Long => JLong}
 import java.math.BigInteger
 
 class NumberEncoder extends MessageToByteEncoder[Number] {
-  def encode(ctx: ChannelHandlerContext, msg: Number, out: ByteBuf) {
+  def encode(ctx: ChannelHandlerContext, msg: Number, out: ByteBuf): Unit = {
     // Convert to a BigInt first for easier implementation.
     val v = msg match {
       case b: BigInt     => b

@@ -15,11 +15,11 @@ class FactorialClientHandler(count: Int) extends SimpleChannelInboundHandler[Big
 
   def factorial: Future[BigInt] = answer.future
 
-  override def channelActive(ctx: ChannelHandlerContext) {
+  override def channelActive(ctx: ChannelHandlerContext): Unit = {
     sendNumbers(1)(ctx)
   }
 
-  def messageReceived(ctx: ChannelHandlerContext, msg: BigInt) {
+  def messageReceived(ctx: ChannelHandlerContext, msg: BigInt): Unit = {
     receivedMessages += 1
     if (receivedMessages == count) {
       // Completes the answer after closing the connection.
@@ -27,12 +27,12 @@ class FactorialClientHandler(count: Int) extends SimpleChannelInboundHandler[Big
     }
   }
 
-  override def exceptionCaught(ctx: ChannelHandlerContext, cause: Throwable) {
+  override def exceptionCaught(ctx: ChannelHandlerContext, cause: Throwable): Unit = {
     logger.log(Level.WARNING, "Unexpected exception from downstream.", cause)
     ctx.close() onComplete { _ => answer failure cause }
   }
 
-  private def sendNumbers(start: Int)(implicit ctx: ChannelHandlerContext) {
+  private def sendNumbers(start: Int)(implicit ctx: ChannelHandlerContext): Unit = {
     // Do not send more than 4096 numbers.
     val out = MessageList.newInstance[Integer](4096)
 

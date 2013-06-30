@@ -13,7 +13,7 @@ import io.netty.handler.codec.{CorruptedFrameException, ByteToMessageDecoder}
  */
 class BigIntDecoder extends ByteToMessageDecoder {
 
-  def decode(ctx: ChannelHandlerContext, in: ByteBuf, out: MessageList[AnyRef]) {
+  def decode(ctx: ChannelHandlerContext, in: ByteBuf, out: MessageList[AnyRef]): Unit =
     // Wait until the length prefix is available
     if (in.readableBytes() >= 5) {
       in.markReaderIndex()
@@ -34,6 +34,5 @@ class BigIntDecoder extends ByteToMessageDecoder {
         out.add(BigInt(new Array[Byte](dataLength) <| in.readBytes))
       }
     }
-  }
 
 }

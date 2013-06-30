@@ -6,7 +6,7 @@ import io.netty.channel.socket.SocketChannel
 import io.netty.handler.codec.compression.{ZlibCodecFactory, ZlibWrapper}
 
 class FactorialClientInitializer(count: Int) extends ChannelInitializer[SocketChannel] {
-  def initChannel(ch: SocketChannel) {
+  def initChannel(ch: SocketChannel): Unit =
     (ch.pipeline() /: Seq(
       // Enable stream compression (you can remove these two if unnecessary)
       "deflater" -> ZlibCodecFactory.newZlibEncoder(ZlibWrapper.GZIP),
@@ -21,5 +21,4 @@ class FactorialClientInitializer(count: Int) extends ChannelInitializer[SocketCh
     )) {
       case (pipeline, (name, handler)) => pipeline.addLast(name, handler)
     }
-  }
 }

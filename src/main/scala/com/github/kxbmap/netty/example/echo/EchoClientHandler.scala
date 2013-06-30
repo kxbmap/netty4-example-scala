@@ -15,15 +15,15 @@ class EchoClientHandler(firstMessageSize: Int) extends ChannelInboundHandlerAdap
         buf.writeByte(i)
     }
 
-  override def channelActive(ctx: ChannelHandlerContext) {
+  override def channelActive(ctx: ChannelHandlerContext): Unit = {
     ctx.write(firstMessage)
   }
 
-  override def messageReceived(ctx: ChannelHandlerContext, msgs: MessageList[AnyRef]) {
+  override def messageReceived(ctx: ChannelHandlerContext, msgs: MessageList[AnyRef]): Unit = {
     ctx.write(msgs)
   }
 
-  override def exceptionCaught(ctx: ChannelHandlerContext, cause: Throwable) {
+  override def exceptionCaught(ctx: ChannelHandlerContext, cause: Throwable): Unit = {
     // Close the connection when an exception is raised.
     logger.log(Level.WARNING, "Unexpected exception from downstream.", cause)
     ctx.close()

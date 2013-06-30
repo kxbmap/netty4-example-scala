@@ -9,12 +9,12 @@ import java.util.logging.Level
  */
 class DiscardServerHandler extends ChannelInboundHandlerAdapter with Logging {
 
-  override def messageReceived(ctx: ChannelHandlerContext, msgs: MessageList[AnyRef]) {
+  override def messageReceived(ctx: ChannelHandlerContext, msgs: MessageList[AnyRef]): Unit = {
     // Discard the received data silently.
     msgs.releaseAllAndRecycle()
   }
 
-  override def exceptionCaught(ctx: ChannelHandlerContext, cause: Throwable) {
+  override def exceptionCaught(ctx: ChannelHandlerContext, cause: Throwable): Unit = {
     logger.log(Level.WARNING, "Unexpected exception from downstream.", cause)
     ctx.close()
   }

@@ -12,7 +12,7 @@ class DiscardClientHandler(messageSize: Int) extends ChannelInboundHandlerAdapte
   private[this] var ctx: ChannelHandlerContext = _
   private[this] var content: ByteBuf = _
 
-  override def channelActive(ctx: ChannelHandlerContext) {
+  override def channelActive(ctx: ChannelHandlerContext): Unit = {
     this.ctx = ctx
 
     // Initialize the message.
@@ -22,21 +22,21 @@ class DiscardClientHandler(messageSize: Int) extends ChannelInboundHandlerAdapte
     generateTraffic()
   }
 
-  override def channelInactive(ctx: ChannelHandlerContext) {
+  override def channelInactive(ctx: ChannelHandlerContext): Unit = {
     content.release()
   }
 
-  override def messageReceived(ctx: ChannelHandlerContext, msgs: MessageList[AnyRef]) {
+  override def messageReceived(ctx: ChannelHandlerContext, msgs: MessageList[AnyRef]): Unit = {
     // Server is supposed to send nothing, but if it sends something, discard it.
     msgs.releaseAllAndRecycle()
   }
 
-  override def exceptionCaught(ctx: ChannelHandlerContext, cause: Throwable) {
+  override def exceptionCaught(ctx: ChannelHandlerContext, cause: Throwable): Unit = {
     logger.log(Level.WARNING, "Unexpected exception from downstream.", cause)
     ctx.close()
   }
 
-  private def generateTraffic() {
+  private def generateTraffic(): Unit = {
     // Flush the outbound buffer to the socket.
     // Once flushed, generate the same amount of traffic again.
     ctx.write(content.duplicate().retain()).addListener(trafficGenerator)
