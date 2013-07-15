@@ -2,8 +2,9 @@ package com.github.kxbmap.netty.example
 package factorial
 
 import io.netty.buffer.ByteBuf
-import io.netty.channel.{MessageList, ChannelHandlerContext}
+import io.netty.channel.ChannelHandlerContext
 import io.netty.handler.codec.{CorruptedFrameException, ByteToMessageDecoder}
+import java.util
 
 /**
  * Decodes the binary representation of a [[scala.BigInt]] prepended
@@ -13,7 +14,7 @@ import io.netty.handler.codec.{CorruptedFrameException, ByteToMessageDecoder}
  */
 class BigIntDecoder extends ByteToMessageDecoder {
 
-  def decode(ctx: ChannelHandlerContext, in: ByteBuf, out: MessageList[AnyRef]): Unit =
+  def decode(ctx: ChannelHandlerContext, in: ByteBuf, out: util.List[AnyRef]): Unit =
     // Wait until the length prefix is available
     if (in.readableBytes() >= 5) {
       in.markReaderIndex()

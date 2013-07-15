@@ -2,14 +2,18 @@ package com.github.kxbmap.netty.example
 package echo
 
 import io.netty.channel.ChannelHandler.Sharable
-import io.netty.channel.{MessageList, ChannelInboundHandlerAdapter, ChannelHandlerContext}
+import io.netty.channel.{ChannelInboundHandlerAdapter, ChannelHandlerContext}
 import java.util.logging.Level
 
 @Sharable
 class EchoServerHandler extends ChannelInboundHandlerAdapter with Logging {
 
-  override def messageReceived(ctx: ChannelHandlerContext, msgs: MessageList[AnyRef]): Unit = {
-    ctx.write(msgs)
+  override def channelRead(ctx: ChannelHandlerContext, msg: AnyRef): Unit = {
+    ctx.write(msg)
+  }
+
+  override def channelReadComplete(ctx: ChannelHandlerContext): Unit = {
+    ctx.flush()
   }
 
   override def exceptionCaught(ctx: ChannelHandlerContext, cause: Throwable): Unit = {

@@ -1,17 +1,16 @@
 package com.github.kxbmap.netty.example
 package discard
 
-import io.netty.channel.{MessageList, ChannelInboundHandlerAdapter, ChannelHandlerContext}
+import io.netty.channel.{SimpleChannelInboundHandler, ChannelHandlerContext}
 import java.util.logging.Level
 
 /**
  * Handles a server-side channel.
  */
-class DiscardServerHandler extends ChannelInboundHandlerAdapter with Logging {
+class DiscardServerHandler extends SimpleChannelInboundHandler[AnyRef] with Logging {
 
-  override def messageReceived(ctx: ChannelHandlerContext, msgs: MessageList[AnyRef]): Unit = {
-    // Discard the received data silently.
-    msgs.releaseAllAndRecycle()
+  def channelRead0(ctx: ChannelHandlerContext, msg: AnyRef): Unit = {
+    // discard
   }
 
   override def exceptionCaught(ctx: ChannelHandlerContext, cause: Throwable): Unit = {

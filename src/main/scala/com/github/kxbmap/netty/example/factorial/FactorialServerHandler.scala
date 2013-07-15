@@ -1,23 +1,25 @@
 package com.github.kxbmap.netty.example
 package factorial
 
-import io.netty.channel.{MessageList, ChannelInboundHandlerAdapter, ChannelHandlerContext}
+import io.netty.channel.{SimpleChannelInboundHandler, ChannelHandlerContext}
 import java.util.logging.Level
 
-class FactorialServerHandler extends ChannelInboundHandlerAdapter with Logging {
+/**
+ * Handler for a server-side channel.  This handler maintains stateful
+ * information which is specific to a certain channel using member variables.
+ * Therefore, an instance of this handler can cover only one channel.  You have
+ * to create a new handler instance whenever you create a new channel and insert
+ * this handler  to avoid a race condition.
+ */
+class FactorialServerHandler extends SimpleChannelInboundHandler[BigInt] with Logging {
 
   private[this] var lastMultiplier: BigInt = 1
   private[this] var factorial: BigInt = 1
 
-  override def messageReceived(ctx: ChannelHandlerContext, msgs: MessageList[AnyRef]): Unit = {
-    import scala.collection.JavaConversions._
-    for (msg <- msgs.cast[BigInt]()) {
-      // Calculate the cumulative factorial and send it to the client.
-      lastMultiplier = msg
-      factorial *= msg
-      ctx.write(factorial)
-    }
-    msgs.recycle()
+  def channelRead0(ctx: ChannelHandlerContext, msg: BigInt): Unit = {
+    lastMultiplier = msg
+    factorial *= msg
+    ctx.writeAndFlush(factorial)
   }
 
   override def channelInactive(ctx: ChannelHandlerContext): Unit = {

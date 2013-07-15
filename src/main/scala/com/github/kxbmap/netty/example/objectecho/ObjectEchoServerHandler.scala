@@ -1,14 +1,18 @@
 package com.github.kxbmap.netty.example
 package objectecho
 
-import io.netty.channel.{MessageList, ChannelInboundHandlerAdapter, ChannelHandlerContext}
+import io.netty.channel.{ChannelInboundHandlerAdapter, ChannelHandlerContext}
 import java.util.logging.Level
 
 class ObjectEchoServerHandler extends ChannelInboundHandlerAdapter with Logging {
 
-  override def messageReceived(ctx: ChannelHandlerContext, msgs: MessageList[AnyRef]): Unit = {
+  override def channelRead(ctx: ChannelHandlerContext, msg: AnyRef): Unit = {
     // Echo back the received object to the client.
-    ctx.write(msgs)
+    ctx.write(msg)
+  }
+
+  override def channelReadComplete(ctx: ChannelHandlerContext): Unit = {
+    ctx.flush()
   }
 
   override def exceptionCaught(ctx: ChannelHandlerContext, cause: Throwable): Unit = {
