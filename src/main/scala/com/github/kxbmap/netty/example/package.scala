@@ -44,6 +44,9 @@ package object example {
           Failure(future.cause())
       )}
 
+    def closeOnComplete(): Unit         = cf.addListener(ChannelFutureListener.CLOSE)
+    def closeOnFailure(): Unit          = cf.addListener(ChannelFutureListener.CLOSE_ON_FAILURE)
+    def fireExceptionOnFailure(): Unit  = cf.addListener(ChannelFutureListener.FIRE_EXCEPTION_ON_FAILURE)
   }
 
 }
