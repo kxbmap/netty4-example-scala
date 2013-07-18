@@ -14,8 +14,6 @@ libraryDependencies ++= Seq(
   "org.javassist" % "javassist" % "3.18.0-GA"   % Runtime
 )
 
-resolvers += Resolver.sonatypeRepo("snapshots")
-
 fork := true
 
 ideaBasePackage := Some("com.github.kxbmap.netty.example")
