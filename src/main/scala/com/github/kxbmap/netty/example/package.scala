@@ -13,6 +13,10 @@ package object example {
     def <|[U](f: T => U): T = { f(obj); obj }
   }
 
+  implicit final class AnyRefOps[A <: AnyRef](val obj: A) extends AnyVal {
+    def ??[B >: A](default: => B): B = if (obj ne null) obj else default
+  }
+
 
   implicit def toChannelInitializer[C <: Channel, U](f: C => U): ChannelInitializer[C] =
     new ChannelInitializer[C] {
