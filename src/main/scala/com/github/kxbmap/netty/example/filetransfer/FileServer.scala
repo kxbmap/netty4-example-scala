@@ -47,9 +47,11 @@ object FileServer extends App {
       (file.exists(), file.isFile) match {
         case (true, true) =>
           ctx.write(s"$file ${file.length()}\n")
-          val region = new DefaultFileRegion(new FileInputStream(file).getChannel, 0, file.length())
+          val fis = new FileInputStream(file)
+          val region = new DefaultFileRegion(fis.getChannel, 0, file.length())
           ctx.write(region)
           ctx.writeAndFlush("\n")
+          fis.close()
 
         case (false, _) => ctx.writeAndFlush(s"File not found: $file\n")
         case (_, false) => ctx.writeAndFlush(s"Not a file: $file\n")
