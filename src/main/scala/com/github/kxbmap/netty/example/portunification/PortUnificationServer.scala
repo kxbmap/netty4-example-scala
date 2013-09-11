@@ -3,9 +3,8 @@ package portunification
 
 import io.netty.bootstrap.ServerBootstrap
 import io.netty.channel.nio.NioEventLoopGroup
-import io.netty.channel.socket.nio.NioServerSocketChannel
 import io.netty.channel.socket.SocketChannel
-import io.netty.handler.logging.LoggingHandler
+import io.netty.channel.socket.nio.NioServerSocketChannel
 
 /**
  * Serves two protocols (HTTP and Factorial) using only one port, enabling
@@ -24,7 +23,6 @@ object PortUnificationServer extends App {
     val b = new ServerBootstrap()
       .group(bossGroup, workerGroup)
       .channel(classOf[NioServerSocketChannel])
-      .handler(new LoggingHandler())
       .childHandler { ch: SocketChannel =>
         ch.pipeline().addLast(new PortUnificationServerHandler())
       }

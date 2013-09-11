@@ -48,18 +48,15 @@ class PortUnificationServerHandler private (detectSsl: Boolean, detectGzip: Bool
     detectGzip && magic1 == 31 && magic2 == 139
 
   private def isHttp(magic1: Int, magic2: Int): Boolean =
-    PartialFunction.cond((magic1, magic2)) {
-      case ('G', 'E') | // GET
-           ('P', 'O') | // POST
-           ('P', 'U') | // PUT
-           ('H', 'E') | // HEAD
-           ('O', 'P') | // OPTIONS
-           ('P', 'A') | // PATCH
-           ('D', 'E') | // DELETE
-           ('T', 'R') | // TRACE
-           ('C', 'O')   // CONNECT
-      => true
-    }
+    magic1 == 'G' && magic2 == 'E' || // GET
+    magic1 == 'P' && magic2 == 'O' || // POST
+    magic1 == 'P' && magic2 == 'U' || // PUT
+    magic1 == 'H' && magic2 == 'E' || // HEAD
+    magic1 == 'O' && magic2 == 'P' || // OPTIONS
+    magic1 == 'P' && magic2 == 'A' || // PATCH
+    magic1 == 'D' && magic2 == 'E' || // DELETE
+    magic1 == 'T' && magic2 == 'R' || // TRACE
+    magic1 == 'C' && magic2 == 'O'    // CONNECT
 
   private def isFactorial(magic1: Int): Boolean =
     magic1 == 'F'
@@ -78,7 +75,7 @@ class PortUnificationServerHandler private (detectSsl: Boolean, detectGzip: Bool
     val p = ctx.pipeline()
     p.addLast("gzipdeflater", ZlibCodecFactory.newZlibEncoder(ZlibWrapper.GZIP))
     p.addLast("gzipinflater", ZlibCodecFactory.newZlibDecoder(ZlibWrapper.GZIP))
-    p.addLast("unificationA", new PortUnificationServerHandler(detectSsl, false))
+    p.addLast("unificationB", new PortUnificationServerHandler(detectSsl, false))
     p.remove(this)
   }
 
